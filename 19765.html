@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>Class 7A CVS | Parent & Visitor Feedback</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-main: #F7F3EB;
+      --surface-card: #FFFCF6;
+      --surface-subtle: #EEE6D9;
+      --text-main: #29251F;
+      --text-muted: #746B5F;
+      --gold-primary: #A58652;
+      --gold-hover: #8D7040;
+      --border-fine: #DCD1C0;
+      --border-focus: #B8A382;
+      --state-success: #2E5A44;
+      --state-error: #9E3A3A;
+      --shadow-soft: 0 4px 20px -2px rgba(41, 37, 31, 0.05);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      font-size: 15px;
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1.5rem 1rem 3rem 1rem;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 520px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 2rem;
+      padding: 1rem 0;
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--gold-primary);
+      margin-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border-fine);
+      padding-bottom: 0.25rem;
+    }
+
+    h1 {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 2.15rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      line-height: 1.15;
+      color: var(--text-main);
+      margin-bottom: 0.6rem;
+    }
+
+    .subtitle {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      max-width: 420px;
+      margin: 0 auto;
+      font-weight: 400;
+    }
+
+    .card {
+      background: var(--surface-card);
+      border: 1px solid var(--border-fine);
+      border-radius: 4px;
+      box-shadow: var(--shadow-soft);
+      padding: 2rem 1.75rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.65rem;
+    }
+
+    label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      color: var(--text-main);
+      margin-bottom: 0.45rem;
+    }
+
+    .field-hint {
+      display: block;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.3rem;
+    }
+
+    input[type="text"],
+    textarea {
+      width: 100%;
+      background: #FFFFFF;
+      border: 1px solid var(--border-fine);
+      border-radius: 3px;
+      padding: 0.75rem 0.85rem;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      color: var(--text-main);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      outline: none;
+    }
+
+    input[type="text"]:focus,
+    textarea:focus {
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 2px rgba(165, 134, 82, 0.15);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 110px;
+      line-height: 1.5;
+    }
+
+    /* Interactive Star Rating Component */
+    .star-rating-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+
+    .stars-row {
+      display: inline-flex;
+      flex-direction: row-reverse;
+      justify-content: flex-end;
+      gap: 0.4rem;
+    }
+
+    .stars-row input {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+      pointer-events: none;
+    }
+
+    .stars-row label {
+      cursor: pointer;
+      font-size: 1.9rem;
+      color: var(--border-fine);
+      line-height: 1;
+      padding: 0.2rem;
+      margin: 0;
+      transition: color 0.15s ease, transform 0.1s ease;
+      user-select: none;
+      touch-action: manipulation;
+    }
+
+    .stars-row label:hover,
+    .stars-row label:hover ~ label,
+    .stars-row input:checked ~ label {
+      color: var(--gold-primary);
+    }
+
+    .stars-row label:active {
+      transform: scale(1.15);
+    }
+
+    .rating-caption {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--gold-primary);
+      min-height: 1.25rem;
+      letter-spacing: 0.02em;
+    }
+
+    .char-counter {
+      display: flex;
+      justify-content: flex-end;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.35rem;
+    }
+
+    .btn-submit {
+      width: 100%;
+      background: var(--gold-primary);
+      color: #FFFFFF;
+      border: 1px solid var(--gold-primary);
+      border-radius: 3px;
+      padding: 0.9rem 1.5rem;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.1s ease;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .btn-submit:hover:not(:disabled) {
+      background: var(--gold-hover);
+      border-color: var(--gold-hover);
+    }
+
+    .btn-submit:active:not(:disabled) {
+      transform: translateY(1px);
+    }
+
+    .btn-submit:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+    }
+
+    .alert {
+      padding: 1rem 1.15rem;
+      border-radius: 3px;
+      margin-top: 1.5rem;
+      font-size: 0.88rem;
+      display: none;
+      line-height: 1.5;
+    }
+
+    .alert-success {
+      background: #F0F5F2;
+      border: 1px solid #C4D9CD;
+      color: var(--state-success);
+    }
+
+    .alert-error {
+      background: #FDF3F3;
+      border: 1px solid #ECC9C9;
+      color: var(--state-error);
+    }
+
+    footer {
+      margin-top: 2.5rem;
+      text-align: center;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .spinner {
+      width: 14px;
+      height: 14px;
+      border: 2px solid rgba(255,255,255,0.4);
+      border-top-color: #FFFFFF;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      display: inline-block;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <div class="badge">Class 7A &bull; School Exhibition</div>
+      <h1>The Computerised Voter System</h1>
+      <p class="subtitle">Your feedback matters. Please share your candid observations and experience with our student team.</p>
+    </header>
+
+    <main class="card">
+      <form id="reviewForm" novalidate>
+        <!-- Reviewer Name -->
+        <div class="form-group">
+          <label for="reviewerName">Your Name <span style="color: var(--state-error);">*</span></label>
+          <input type="text" id="reviewerName" name="reviewerName" maxlength="100" required placeholder="e.g., Dr. A. Sharma" autocomplete="name">
+        </div>
+
+        <!-- Star Rating -->
+        <div class="form-group">
+          <label id="ratingGroupLabel">Overall Experience <span style="color: var(--state-error);">*</span></label>
+          <div class="star-rating-wrapper" role="radiogroup" aria-labelledby="ratingGroupLabel">
+            <div class="stars-row">
+              <input type="radio" id="star5" name="rating" value="5" />
+              <label for="star5" title="5 stars" aria-label="5 stars">&#9733;</label>
+
+              <input type="radio" id="star4" name="rating" value="4" />
+              <label for="star4" title="4 stars" aria-label="4 stars">&#9733;</label>
+
+              <input type="radio" id="star3" name="rating" value="3" />
+              <label for="star3" title="3 stars" aria-label="3 stars">&#9733;</label>
+
+              <input type="radio" id="star2" name="rating" value="2" />
+              <label for="star2" title="2 stars" aria-label="2 stars">&#9733;</label>
+
+              <input type="radio" id="star1" name="rating" value="1" />
+              <label for="star1" title="1 star" aria-label="1 star">&#9733;</label>
+            </div>
+            <div class="rating-caption" id="ratingCaption">Select a rating</div>
+          </div>
+        </div>
+
+        <!-- Review Text -->
+        <div class="form-group">
+          <label for="reviewText">Your Review <span style="color: var(--state-error);">*</span></label>
+          <textarea id="reviewText" name="reviewText" maxlength="500" required placeholder="Share your thoughts on the voting machine workflow, user interface, or design..."></textarea>
+          <div class="char-counter"><span id="charCount">0</span>&nbsp;/ 500</div>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" id="submitBtn" class="btn-submit">
+          <span id="btnText">Submit Feedback</span>
+        </button>
+
+        <!-- Feedback Alert Boxes -->
+        <div id="statusSuccess" class="alert alert-success" role="status">
+          Thank you for sharing your feedback. Your review has been submitted successfully to the Class 7A project team.
+        </div>
+        <div id="statusError" class="alert alert-error" role="alert"></div>
+      </form>
+    </main>
+
+    <footer>
+      Class 7A Exhibition Project &bull; Computerised Voter System
+    </footer>
+  </div>
+
+  <!-- Firebase Modular SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
+    import { getDatabase, ref, push, set, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-database.js";
+
+    // Standard Project Config with Direct Endpoint
+    const firebaseConfig = {
+      apiKey: "REPLACE_WITH_YOUR_FIREBASE_WEB_API_KEY",
+      authDomain: "cvs-review-f67ee.firebaseapp.com",
+      databaseURL: "https://cvs-review-f67ee-default-rtdb.firebaseio.com",
+      projectId: "cvs-review-f67ee",
+      storageBucket: "cvs-review-f67ee.firebasestorage.app",
+      messagingSenderId: "REPLACE_IF_CONFIGURED",
+      appId: "REPLACE_WITH_YOUR_FIREBASE_APP_ID"
+    };
+
+    let db = null;
+    try {
+      const app = initializeApp(firebaseConfig);
+      db = getDatabase(app);
+    } catch (e) {
+      console.error("Firebase initialization failed:", e);
+    }
+
+    // UI Elements
+    const form = document.getElementById("reviewForm");
+    const nameInput = document.getElementById("reviewerName");
+    const reviewInput = document.getElementById("reviewText");
+    const charCountEl = document.getElementById("charCount");
+    const submitBtn = document.getElementById("submitBtn");
+    const btnText = document.getElementById("btnText");
+    const statusSuccess = document.getElementById("statusSuccess");
+    const statusError = document.getElementById("statusError");
+    const ratingCaption = document.getElementById("ratingCaption");
+    const ratingInputs = document.querySelectorAll('input[name="rating"]');
+
+    const ratingDescriptions = {
+      "1": "1 Star &mdash; Poor",
+      "2": "2 Stars &mdash; Fair",
+      "3": "3 Stars &mdash; Good",
+      "4": "4 Stars &mdash; Very Good",
+      "5": "5 Stars &mdash; Excellent"
+    };
+
+    // Rating change listener
+    ratingInputs.forEach(input => {
+      input.addEventListener("change", (e) => {
+        ratingCaption.innerHTML = ratingDescriptions[e.target.value] || "Select a rating";
+      });
+    });
+
+    // Character counter listener
+    reviewInput.addEventListener("input", () => {
+      charCountEl.textContent = reviewInput.value.length;
+    });
+
+    // Form Submission
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      statusSuccess.style.display = "none";
+      statusError.style.display = "none";
+
+      const name = nameInput.value.trim();
+      const review = reviewInput.value.trim();
+      const checkedRating = document.querySelector('input[name="rating"]:checked');
+
+      if (!name) {
+        showError("Please enter your name.");
+        nameInput.focus();
+        return;
+      }
+
+      if (!checkedRating) {
+        showError("Please select a star rating from 1 to 5.");
+        return;
+      }
+
+      const rating = parseInt(checkedRating.value, 10);
+      if (isNaN(rating) || rating < 1 || rating > 5) {
+        showError("Invalid rating selected.");
+        return;
+      }
+
+      if (!review) {
+        showError("Please enter your review observations.");
+        reviewInput.focus();
+        return;
+      }
+
+      if (review.length > 500) {
+        showError("Your review exceeds the 500 character limit.");
+        return;
+      }
+
+      if (!db) {
+        showError("Unable to reach the database service. Please check your internet connection.");
+        return;
+      }
+
+      // Enter submission state
+      submitBtn.disabled = true;
+      btnText.innerHTML = `<span class="spinner"></span> Recording...`;
+
+      try {
+        const reviewsRef = ref(db, "reviews");
+        const newReviewRef = push(reviewsRef);
+
+        const payload = {
+          name: name,
+          rating: rating,
+          review: review,
+          createdAt: Date.now() // Compatible with RTDB rule integer validation
+        };
+
+        await set(newReviewRef, payload);
+
+        // Success state
+        statusSuccess.style.display = "block";
+        form.reset();
+        ratingCaption.innerHTML = "Select a rating";
+        charCountEl.textContent = "0";
+
+        statusSuccess.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      } catch (err) {
+        console.error("Submission failed:", err);
+        showError(`Submission failed: ${err.message || "Could not record review. Check Firebase permissions."}`);
+      } finally {
+        submitBtn.disabled = false;
+        btnText.textContent = "Submit Feedback";
+      }
+    });
+
+    function showError(msg) {
+      statusError.textContent = msg;
+      statusError.style.display = "block";
+      statusError.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+  </script>
+</body>
+</html>
