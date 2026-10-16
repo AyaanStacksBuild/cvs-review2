@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-  <title>Class 7A CVS | Parent & Visitor Feedback</title>
+  <title>CVS Administration Dashboard | Class 7A</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-  
+
   <style>
     :root {
       --bg-main: #F7F3EB;
@@ -18,339 +18,518 @@
       --gold-primary: #A58652;
       --gold-hover: #8D7040;
       --border-fine: #DCD1C0;
-      --border-focus: #B8A382;
       --state-success: #2E5A44;
       --state-error: #9E3A3A;
-      --shadow-soft: 0 4px 20px -2px rgba(41, 37, 31, 0.05);
+      --shadow-subtle: 0 2px 12px rgba(41, 37, 31, 0.04);
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       background-color: var(--bg-main);
       color: var(--text-main);
       font-family: 'Inter', system-ui, -apple-system, sans-serif;
-      font-size: 15px;
-      line-height: 1.6;
+      font-size: 14px;
+      line-height: 1.5;
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 1.5rem 1rem 3rem 1rem;
       -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
     }
 
-    .container {
+    .wrapper {
       width: 100%;
-      max-width: 520px;
+      max-width: 1140px;
       margin: 0 auto;
+      padding: 1.25rem 1rem 3rem 1rem;
     }
 
+    /* Header & Branding */
     header {
-      text-align: center;
-      margin-bottom: 2rem;
-      padding: 1rem 0;
-    }
-
-    .badge {
-      display: inline-block;
-      font-size: 0.72rem;
-      font-weight: 600;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--gold-primary);
-      margin-bottom: 0.75rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 1.25rem;
       border-bottom: 1px solid var(--border-fine);
-      padding-bottom: 0.25rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      gap: 1rem;
     }
 
-    h1 {
+    .header-brand {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .school-logo {
+      width: 58px;
+      height: 58px;
+      flex-shrink: 0;
+      object-fit: contain;
+      border-radius: 50%;
+      background: var(--surface-card);
+      border: 1px solid var(--border-fine);
+      padding: 3px;
+      box-shadow: var(--shadow-subtle);
+    }
+
+    .brand-title {
       font-family: 'Cormorant Garamond', Georgia, serif;
-      font-size: 2.15rem;
-      font-weight: 600;
-      letter-spacing: -0.01em;
-      line-height: 1.15;
+      font-size: 1.6rem;
+      font-weight: 700;
       color: var(--text-main);
-      margin-bottom: 0.6rem;
+      line-height: 1.2;
     }
 
-    .subtitle {
-      font-size: 0.95rem;
+    .brand-sub {
+      font-size: 0.78rem;
+      color: var(--gold-primary);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.2rem;
+    }
+
+    .author-tag {
       color: var(--text-muted);
-      max-width: 420px;
-      margin: 0 auto;
-      font-weight: 400;
+      font-size: 0.75rem;
+      font-weight: 500;
+      text-transform: none;
+      letter-spacing: normal;
+      background: var(--surface-subtle);
+      padding: 0.15rem 0.5rem;
+      border-radius: 12px;
+      white-space: nowrap;
     }
 
-    .card {
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      width: auto;
+    }
+
+    .status-badge {
+      font-size: 0.78rem;
+      color: var(--state-success);
+      background: #EBF3EE;
+      border: 1px solid #CADBCF;
+      padding: 0.35rem 0.65rem;
+      border-radius: 20px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .btn {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 500;
+      letter-spacing: 0.03em;
+      padding: 0.55rem 0.9rem;
+      border-radius: 3px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      border: 1px solid var(--border-fine);
+      background: transparent;
+      color: var(--text-main);
+      transition: all 0.15s ease;
+      touch-action: manipulation;
+    }
+
+    .btn:hover {
+      background: var(--surface-subtle);
+    }
+
+    /* KPI Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 0.85rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .stat-card {
       background: var(--surface-card);
       border: 1px solid var(--border-fine);
       border-radius: 4px;
-      box-shadow: var(--shadow-soft);
-      padding: 2rem 1.75rem;
+      padding: 1rem;
+      box-shadow: var(--shadow-subtle);
     }
 
-    .form-group {
-      margin-bottom: 1.65rem;
-    }
-
-    label {
-      display: block;
-      font-size: 0.85rem;
-      font-weight: 500;
-      letter-spacing: 0.02em;
-      color: var(--text-main);
-      margin-bottom: 0.45rem;
-    }
-
-    .field-hint {
-      display: block;
-      font-size: 0.75rem;
+    .stat-label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
       color: var(--text-muted);
-      margin-top: 0.3rem;
+      margin-bottom: 0.35rem;
+      font-weight: 500;
     }
 
-    input[type="text"],
-    textarea {
+    .stat-val {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 1.85rem;
+      font-weight: 700;
+      color: var(--text-main);
+      line-height: 1;
+    }
+
+    .stat-val-sub {
+      font-size: 0.9rem;
+      font-weight: 400;
+      color: var(--gold-primary);
+      margin-left: 0.2rem;
+    }
+
+    /* Middle Layout */
+    .dashboard-middle {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .panel {
+      background: var(--surface-card);
+      border: 1px solid var(--border-fine);
+      border-radius: 4px;
+      padding: 1.2rem;
+      box-shadow: var(--shadow-subtle);
+    }
+
+    .panel-header {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      border-bottom: 1px solid var(--border-fine);
+      padding-bottom: 0.4rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .dist-row {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 0.55rem;
+      font-size: 0.82rem;
+    }
+
+    .dist-label {
+      width: 50px;
+      color: var(--text-muted);
+    }
+
+    .dist-track {
+      flex: 1;
+      height: 7px;
+      background: var(--surface-subtle);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .dist-fill {
+      height: 100%;
+      background: var(--gold-primary);
+      width: 0%;
+      transition: width 0.4s ease;
+    }
+
+    .dist-count {
+      width: 30px;
+      text-align: right;
+      font-weight: 600;
+      font-size: 0.8rem;
+    }
+
+    /* Filters Bar */
+    .filters-bar {
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .search-box {
+      width: 100%;
+    }
+
+    .filters-row-controls {
+      display: flex;
+      gap: 0.65rem;
+      width: 100%;
+    }
+
+    .search-box input,
+    .filter-select {
       width: 100%;
       background: #FFFFFF;
       border: 1px solid var(--border-fine);
       border-radius: 3px;
-      padding: 0.75rem 0.85rem;
-      font-family: 'Inter', sans-serif;
-      font-size: 0.95rem;
+      padding: 0.6rem 0.75rem;
+      font-size: 0.85rem;
       color: var(--text-main);
-      transition: border-color 0.2s ease, box-shadow 0.2s ease;
       outline: none;
+      -webkit-appearance: none;
+      appearance: none;
     }
 
-    input[type="text"]:focus,
-    textarea:focus {
-      border-color: var(--border-focus);
-      box-shadow: 0 0 0 2px rgba(165, 134, 82, 0.15);
+    .filter-select {
+      background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23746B5F%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.7rem top 50%;
+      background-size: 0.65rem auto;
+      padding-right: 1.8rem;
     }
 
-    textarea {
-      resize: vertical;
-      min-height: 110px;
-      line-height: 1.5;
+    .search-box input:focus,
+    .filter-select:focus {
+      border-color: var(--gold-primary);
     }
 
-    /* Interactive Star Rating Component */
-    .star-rating-wrapper {
+    /* Review Card */
+    .review-list {
       display: flex;
       flex-direction: column;
-      align-items: flex-start;
-      gap: 0.5rem;
+      gap: 0.85rem;
     }
 
-    .stars-row {
-      display: inline-flex;
-      flex-direction: row-reverse;
-      justify-content: flex-end;
+    .review-card {
+      background: var(--surface-card);
+      border: 1px solid var(--border-fine);
+      border-radius: 4px;
+      padding: 1.1rem;
+      box-shadow: var(--shadow-subtle);
+    }
+
+    .review-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.5rem;
+      flex-wrap: wrap;
       gap: 0.4rem;
     }
 
-    .stars-row input {
-      position: absolute;
-      opacity: 0;
-      width: 0;
-      height: 0;
-      pointer-events: none;
-    }
-
-    .stars-row label {
-      cursor: pointer;
-      font-size: 1.9rem;
-      color: var(--border-fine);
-      line-height: 1;
-      padding: 0.2rem;
-      margin: 0;
-      transition: color 0.15s ease, transform 0.1s ease;
-      user-select: none;
-      touch-action: manipulation;
-    }
-
-    .stars-row label:hover,
-    .stars-row label:hover ~ label,
-    .stars-row input:checked ~ label {
-      color: var(--gold-primary);
-    }
-
-    .stars-row label:active {
-      transform: scale(1.15);
-    }
-
-    .rating-caption {
-      font-size: 0.85rem;
-      font-weight: 500;
-      color: var(--gold-primary);
-      min-height: 1.25rem;
-      letter-spacing: 0.02em;
-    }
-
-    .char-counter {
+    .reviewer-meta {
       display: flex;
-      justify-content: flex-end;
+      align-items: center;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+
+    .reviewer-name {
+      font-weight: 600;
+      font-size: 0.92rem;
+      color: var(--text-main);
+    }
+
+    .stars-display {
+      color: var(--gold-primary);
+      letter-spacing: 0.08em;
+      font-size: 0.9rem;
+    }
+
+    .review-timestamp {
       font-size: 0.75rem;
       color: var(--text-muted);
-      margin-top: 0.35rem;
     }
 
-    .btn-submit {
-      width: 100%;
-      background: var(--gold-primary);
-      color: #FFFFFF;
-      border: 1px solid var(--gold-primary);
-      border-radius: 3px;
-      padding: 0.9rem 1.5rem;
-      font-family: 'Inter', sans-serif;
-      font-size: 0.9rem;
-      font-weight: 500;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      cursor: pointer;
-      transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.1s ease;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 0.5rem;
-      margin-top: 1rem;
-    }
-
-    .btn-submit:hover:not(:disabled) {
-      background: var(--gold-hover);
-      border-color: var(--gold-hover);
-    }
-
-    .btn-submit:active:not(:disabled) {
-      transform: translateY(1px);
-    }
-
-    .btn-submit:disabled {
-      opacity: 0.65;
-      cursor: not-allowed;
-    }
-
-    .alert {
-      padding: 1rem 1.15rem;
-      border-radius: 3px;
-      margin-top: 1.5rem;
+    .review-content {
       font-size: 0.88rem;
-      display: none;
-      line-height: 1.5;
+      color: #38342D;
+      line-height: 1.55;
+      white-space: pre-wrap;
+      word-break: break-word;
     }
 
-    .alert-success {
-      background: #F0F5F2;
-      border: 1px solid #C4D9CD;
-      color: var(--state-success);
+    .empty-state {
+      text-align: center;
+      padding: 2.5rem 1rem;
+      background: var(--surface-card);
+      border: 1px dashed var(--border-fine);
+      border-radius: 4px;
+      color: var(--text-muted);
+      font-size: 0.85rem;
     }
 
-    .alert-error {
-      background: #FDF3F3;
-      border: 1px solid #ECC9C9;
-      color: var(--state-error);
+    .loading-spinner {
+      text-align: center;
+      padding: 2.5rem;
+      color: var(--gold-primary);
+      font-style: italic;
+      font-size: 0.85rem;
     }
 
     footer {
       margin-top: 2.5rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--border-fine);
       text-align: center;
       font-size: 0.78rem;
       color: var(--text-muted);
+      line-height: 1.5;
     }
 
-    .spinner {
-      width: 14px;
-      height: 14px;
-      border: 2px solid rgba(255,255,255,0.4);
-      border-top-color: #FFFFFF;
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-      display: inline-block;
-    }
+    /* Phone Breakpoints */
+    @media (max-width: 680px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
 
-    @keyframes spin {
-      to { transform: rotate(360deg); }
+      .header-actions {
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      .dashboard-middle {
+        grid-template-columns: 1fr;
+      }
+
+      .filters-row-controls {
+        flex-direction: row;
+      }
+
+      .filters-row-controls > div {
+        flex: 1;
+      }
     }
   </style>
 </head>
 <body>
 
-  <div class="container">
+  <div class="wrapper">
     <header>
-      <div class="badge">Class 7A &bull; School Exhibition</div>
-      <h1>The Computerised Voter System</h1>
-      <p class="subtitle">Your feedback matters. Please share your candid observations and experience with our student team.</p>
+      <div class="header-brand">
+        <img src="logo.png" alt="Stepping Stones High School Logo" class="school-logo" onerror="this.style.display='none'">
+        <div>
+          <div class="brand-sub">
+            <span>Class 7A Exhibition</span>
+            <span class="author-tag">&bull; Made by Ayaan Patel</span>
+          </div>
+          <h1 class="brand-title">CVS Review Administration</h1>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <span class="status-badge">&#9679; Live Sync</span>
+        <button id="exportBtn" class="btn">Export CSV</button>
+      </div>
     </header>
 
-    <main class="card">
-      <form id="reviewForm" novalidate>
-        <!-- Reviewer Name -->
-        <div class="form-group">
-          <label for="reviewerName">Your Name <span style="color: var(--state-error);">*</span></label>
-          <input type="text" id="reviewerName" name="reviewerName" maxlength="100" required placeholder="e.g., Dr. A. Sharma" autocomplete="name">
+    <main id="dashboardContent">
+      <section class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Total Reviews</div>
+          <div class="stat-val" id="statTotal">0</div>
         </div>
+        <div class="stat-card">
+          <div class="stat-label">Average Score</div>
+          <div class="stat-val"><span id="statAvg">0.0</span><span class="stat-val-sub">/ 5.0</span></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">5-Star Feedback</div>
+          <div class="stat-val" id="stat5Star">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Critical (&le; 2&star;)</div>
+          <div class="stat-val" id="statCritical">0</div>
+        </div>
+      </section>
 
-        <!-- Star Rating -->
-        <div class="form-group">
-          <label id="ratingGroupLabel">Overall Experience <span style="color: var(--state-error);">*</span></label>
-          <div class="star-rating-wrapper" role="radiogroup" aria-labelledby="ratingGroupLabel">
-            <div class="stars-row">
-              <input type="radio" id="star5" name="rating" value="5" />
-              <label for="star5" title="5 stars" aria-label="5 stars">&#9733;</label>
-
-              <input type="radio" id="star4" name="rating" value="4" />
-              <label for="star4" title="4 stars" aria-label="4 stars">&#9733;</label>
-
-              <input type="radio" id="star3" name="rating" value="3" />
-              <label for="star3" title="3 stars" aria-label="3 stars">&#9733;</label>
-
-              <input type="radio" id="star2" name="rating" value="2" />
-              <label for="star2" title="2 stars" aria-label="2 stars">&#9733;</label>
-
-              <input type="radio" id="star1" name="rating" value="1" />
-              <label for="star1" title="1 star" aria-label="1 star">&#9733;</label>
-            </div>
-            <div class="rating-caption" id="ratingCaption">Select a rating</div>
+      <div class="dashboard-middle">
+        <div class="panel">
+          <div class="panel-header">Rating Distribution</div>
+          <div class="dist-row">
+            <span class="dist-label">5 Stars</span>
+            <div class="dist-track"><div id="bar5" class="dist-fill"></div></div>
+            <span class="dist-count" id="count5">0</span>
+          </div>
+          <div class="dist-row">
+            <span class="dist-label">4 Stars</span>
+            <div class="dist-track"><div id="bar4" class="dist-fill"></div></div>
+            <span class="dist-count" id="count4">0</span>
+          </div>
+          <div class="dist-row">
+            <span class="dist-label">3 Stars</span>
+            <div class="dist-track"><div id="bar3" class="dist-fill"></div></div>
+            <span class="dist-count" id="count3">0</span>
+          </div>
+          <div class="dist-row">
+            <span class="dist-label">2 Stars</span>
+            <div class="dist-track"><div id="bar2" class="dist-fill"></div></div>
+            <span class="dist-count" id="count2">0</span>
+          </div>
+          <div class="dist-row">
+            <span class="dist-label">1 Star</span>
+            <div class="dist-track"><div id="bar1" class="dist-fill"></div></div>
+            <span class="dist-count" id="count1">0</span>
           </div>
         </div>
 
-        <!-- Review Text -->
-        <div class="form-group">
-          <label for="reviewText">Your Review <span style="color: var(--state-error);">*</span></label>
-          <textarea id="reviewText" name="reviewText" maxlength="500" required placeholder="Share your thoughts on the voting machine workflow, user interface, or design..."></textarea>
-          <div class="char-counter"><span id="charCount">0</span>&nbsp;/ 500</div>
+        <div class="panel" style="display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div class="panel-header">Exhibition Summary</div>
+            <p style="color: var(--text-muted); font-size: 0.85rem; line-height: 1.55;">
+              Real-time feed connected directly to Firebase. Feedback entered by visitors on phones updates immediately below.
+            </p>
+          </div>
+          <div style="font-size: 0.78rem; color: var(--gold-primary); font-weight: 500; margin-top: 1rem;">
+            Project: cvs-review-f67ee
+          </div>
         </div>
+      </div>
 
-        <!-- Submit Button -->
-        <button type="submit" id="submitBtn" class="btn-submit">
-          <span id="btnText">Submit Feedback</span>
-        </button>
-
-        <!-- Feedback Alert Boxes -->
-        <div id="statusSuccess" class="alert alert-success" role="status">
-          Thank you for sharing your feedback. Your review has been submitted successfully to the Class 7A project team.
+      <div class="filters-bar">
+        <div class="search-box">
+          <input type="text" id="searchInput" placeholder="Search by name or review text...">
         </div>
-        <div id="statusError" class="alert alert-error" role="alert"></div>
-      </form>
+        <div class="filters-row-controls">
+          <div>
+            <select id="ratingFilter" class="filter-select">
+              <option value="all">All Ratings</option>
+              <option value="5">5 Stars only</option>
+              <option value="4">4 Stars only</option>
+              <option value="3">3 Stars only</option>
+              <option value="2">2 Stars only</option>
+              <option value="1">1 Star only</option>
+            </select>
+          </div>
+          <div>
+            <select id="sortOrder" class="filter-select">
+              <option value="newest">Newest first</option>
+              <option value="oldest">Oldest first</option>
+              <option value="highest">Highest rating</option>
+              <option value="lowest">Lowest rating</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div id="reviewsContainer" class="review-list">
+        <div class="loading-spinner">Connecting to Firebase Realtime Stream...</div>
+      </div>
     </main>
 
     <footer>
-      Class 7A Exhibition Project &bull; Computerised Voter System
+      Stepping Stones High School &bull; Class 7A CVS Exhibition<br>
+      Created by Ayaan Patel
     </footer>
   </div>
 
-  <!-- Firebase Modular SDK -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
-    import { getDatabase, ref, push, set, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-database.js";
+    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-database.js";
 
-    // Standard Project Config with Direct Endpoint
     const firebaseConfig = {
       apiKey: "REPLACE_WITH_YOUR_FIREBASE_WEB_API_KEY",
       authDomain: "cvs-review-f67ee.firebaseapp.com",
@@ -361,126 +540,165 @@
       appId: "REPLACE_WITH_YOUR_FIREBASE_APP_ID"
     };
 
-    let db = null;
-    try {
-      const app = initializeApp(firebaseConfig);
-      db = getDatabase(app);
-    } catch (e) {
-      console.error("Firebase initialization failed:", e);
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    let currentReviews = [];
+
+    const searchInput = document.getElementById("searchInput");
+    const ratingFilter = document.getElementById("ratingFilter");
+    const sortOrder = document.getElementById("sortOrder");
+    const reviewsContainer = document.getElementById("reviewsContainer");
+    const exportBtn = document.getElementById("exportBtn");
+
+    const reviewsRef = ref(db, "reviews");
+    onValue(reviewsRef, (snapshot) => {
+      const data = snapshot.val();
+      currentReviews = [];
+
+      if (data) {
+        Object.keys(data).forEach((key) => {
+          currentReviews.push({
+            id: key,
+            name: data[key].name || "Anonymous",
+            rating: Number(data[key].rating) || 0,
+            review: data[key].review || "",
+            createdAt: data[key].createdAt || Date.now()
+          });
+        });
+      }
+
+      updateStats(currentReviews);
+      renderFilteredReviews();
+    }, (error) => {
+      console.error("Database read error:", error);
+      reviewsContainer.innerHTML = `<div class="empty-state" style="color: var(--state-error);">Database Read Error: ${error.message}</div>`;
+    });
+
+    function updateStats(items) {
+      const total = items.length;
+      document.getElementById("statTotal").textContent = total;
+
+      if (total === 0) {
+        document.getElementById("statAvg").textContent = "0.0";
+        document.getElementById("stat5Star").textContent = "0";
+        document.getElementById("statCritical").textContent = "0";
+        for (let i = 1; i <= 5; i++) {
+          document.getElementById(`count${i}`).textContent = "0";
+          document.getElementById(`bar${i}`).style.width = "0%";
+        }
+        return;
+      }
+
+      const sum = items.reduce((acc, curr) => acc + curr.rating, 0);
+      const avg = (sum / total).toFixed(1);
+      document.getElementById("statAvg").textContent = avg;
+
+      const counts = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+      items.forEach(r => {
+        if (counts[r.rating] !== undefined) {
+          counts[r.rating]++;
+        }
+      });
+
+      document.getElementById("stat5Star").textContent = counts[5];
+      document.getElementById("statCritical").textContent = counts[1] + counts[2];
+
+      for (let i = 1; i <= 5; i++) {
+        const count = counts[i];
+        const pct = Math.round((count / total) * 100);
+        document.getElementById(`count${i}`).textContent = count;
+        document.getElementById(`bar${i}`).style.width = `${pct}%`;
+      }
     }
 
-    // UI Elements
-    const form = document.getElementById("reviewForm");
-    const nameInput = document.getElementById("reviewerName");
-    const reviewInput = document.getElementById("reviewText");
-    const charCountEl = document.getElementById("charCount");
-    const submitBtn = document.getElementById("submitBtn");
-    const btnText = document.getElementById("btnText");
-    const statusSuccess = document.getElementById("statusSuccess");
-    const statusError = document.getElementById("statusError");
-    const ratingCaption = document.getElementById("ratingCaption");
-    const ratingInputs = document.querySelectorAll('input[name="rating"]');
+    function renderFilteredReviews() {
+      const query = searchInput.value.toLowerCase().trim();
+      const ratingVal = ratingFilter.value;
+      const sort = sortOrder.value;
 
-    const ratingDescriptions = {
-      "1": "1 Star &mdash; Poor",
-      "2": "2 Stars &mdash; Fair",
-      "3": "3 Stars &mdash; Good",
-      "4": "4 Stars &mdash; Very Good",
-      "5": "5 Stars &mdash; Excellent"
-    };
-
-    // Rating change listener
-    ratingInputs.forEach(input => {
-      input.addEventListener("change", (e) => {
-        ratingCaption.innerHTML = ratingDescriptions[e.target.value] || "Select a rating";
+      let filtered = currentReviews.filter((item) => {
+        const matchesQuery = item.name.toLowerCase().includes(query) || item.review.toLowerCase().includes(query);
+        const matchesRating = ratingVal === "all" || item.rating.toString() === ratingVal;
+        return matchesQuery && matchesRating;
       });
+
+      filtered.sort((a, b) => {
+        if (sort === "newest") return b.createdAt - a.createdAt;
+        if (sort === "oldest") return a.createdAt - b.createdAt;
+        if (sort === "highest") return b.rating - a.rating;
+        if (sort === "lowest") return a.rating - b.rating;
+        return 0;
+      });
+
+      if (filtered.length === 0) {
+        reviewsContainer.innerHTML = `
+          <div class="empty-state">
+            ${currentReviews.length === 0 ? "No visitor feedback has been submitted to the database yet." : "No reviews match your search filter criteria."}
+          </div>
+        `;
+        return;
+      }
+
+      reviewsContainer.innerHTML = filtered.map((item) => {
+        const stars = "&#9733;".repeat(item.rating) + "&#9734;".repeat(5 - item.rating);
+        const dateStr = new Date(item.createdAt).toLocaleString(undefined, {
+          month: 'short',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+
+        const safeName = escapeHtml(item.name);
+        const safeReview = escapeHtml(item.review);
+
+        return `
+          <article class="review-card">
+            <div class="review-header">
+              <div class="reviewer-meta">
+                <span class="reviewer-name">${safeName}</span>
+                <span class="stars-display" title="${item.rating} out of 5">${stars}</span>
+              </div>
+              <time class="review-timestamp">${dateStr}</time>
+            </div>
+            <div class="review-content">${safeReview}</div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    searchInput.addEventListener("input", renderFilteredReviews);
+    ratingFilter.addEventListener("change", renderFilteredReviews);
+    sortOrder.addEventListener("change", renderFilteredReviews);
+
+    exportBtn.addEventListener("click", () => {
+      if (currentReviews.length === 0) {
+        alert("No reviews available to export.");
+        return;
+      }
+
+      const headers = ["Review ID", "Reviewer Name", "Rating", "Review Text", "Date Submitted"];
+      const rows = currentReviews.map((r) => [
+        `"${r.id}"`,
+        `"${r.name.replace(/"/g, '""')}"`,
+        r.rating,
+        `"${r.review.replace(/"/g, '""').replace(/\n/g, ' ')}"`,
+        `"${new Date(r.createdAt).toISOString()}"`
+      ]);
+
+      const csvContent = "data:text/csv;charset=utf-8," + [headers.join(","), ...rows.map(e => e.join(","))].join("\n");
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", `Class7A_CVS_Reviews_${new Date().toISOString().slice(0, 10)}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     });
 
-    // Character counter listener
-    reviewInput.addEventListener("input", () => {
-      charCountEl.textContent = reviewInput.value.length;
-    });
-
-    // Form Submission
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      statusSuccess.style.display = "none";
-      statusError.style.display = "none";
-
-      const name = nameInput.value.trim();
-      const review = reviewInput.value.trim();
-      const checkedRating = document.querySelector('input[name="rating"]:checked');
-
-      if (!name) {
-        showError("Please enter your name.");
-        nameInput.focus();
-        return;
-      }
-
-      if (!checkedRating) {
-        showError("Please select a star rating from 1 to 5.");
-        return;
-      }
-
-      const rating = parseInt(checkedRating.value, 10);
-      if (isNaN(rating) || rating < 1 || rating > 5) {
-        showError("Invalid rating selected.");
-        return;
-      }
-
-      if (!review) {
-        showError("Please enter your review observations.");
-        reviewInput.focus();
-        return;
-      }
-
-      if (review.length > 500) {
-        showError("Your review exceeds the 500 character limit.");
-        return;
-      }
-
-      if (!db) {
-        showError("Unable to reach the database service. Please check your internet connection.");
-        return;
-      }
-
-      // Enter submission state
-      submitBtn.disabled = true;
-      btnText.innerHTML = `<span class="spinner"></span> Recording...`;
-
-      try {
-        const reviewsRef = ref(db, "reviews");
-        const newReviewRef = push(reviewsRef);
-
-        const payload = {
-          name: name,
-          rating: rating,
-          review: review,
-          createdAt: Date.now() // Compatible with RTDB rule integer validation
-        };
-
-        await set(newReviewRef, payload);
-
-        // Success state
-        statusSuccess.style.display = "block";
-        form.reset();
-        ratingCaption.innerHTML = "Select a rating";
-        charCountEl.textContent = "0";
-
-        statusSuccess.scrollIntoView({ behavior: "smooth", block: "nearest" });
-      } catch (err) {
-        console.error("Submission failed:", err);
-        showError(`Submission failed: ${err.message || "Could not record review. Check Firebase permissions."}`);
-      } finally {
-        submitBtn.disabled = false;
-        btnText.textContent = "Submit Feedback";
-      }
-    });
-
-    function showError(msg) {
-      statusError.textContent = msg;
-      statusError.style.display = "block";
-      statusError.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    function escapeHtml(text) {
+      const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+      return text.replace(/[&<>"']/g, (m) => map[m]);
     }
   </script>
 </body>
